@@ -1,11 +1,10 @@
-// app.js
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const { calculateInvestments, calculateShares, calculatePercentages, calculateTotalInvestment, calculateAmountShares } = require('./public/stockTradeGenerator');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
