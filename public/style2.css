@@ -1,0 +1,117 @@
+html {
+  height: 100%;
+}
+
+body {
+  color: #330000;
+  font-family: 'Xanh Mono', monospace;
+  box-sizing: ;
+  background-color: ;
+  background: url("Money.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: ;
+  background-size: cover;
+}
+
+div {
+  
+}
+
+main {
+  width: 90%;
+  max-width: 1080px;
+  padding: 40px 0 0;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #2080df;
+  font-size: 3.75em;
+}
+
+h2 {
+  color: #2080df;
+  font-size: 2.25em;
+}
+
+p {
+  font-size: 1.1em;
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+  color: #330000;
+}
+
+/* unvisited link */
+a:link {
+  color: #330000;
+}
+
+/* visited link */
+a:visited {
+  color: #330000;
+}
+
+/* mouse over link */
+a:hover {
+  color: #330000;
+  font-weight: 1000;
+}
+
+/* selected link */
+a:active {
+  color: #a6a6a6;
+}
+
+button {
+  background-color: #ffad33;
+  color: #2080df;
+  border: 2px solid black;
+  border-radius: ;
+  width: 265px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-family: 'Xanh Mono', monospace;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+button:hover {
+  background-color: #e0e0d1;
+}
+
+.logo {
+  color: #a6a6a6;
+  font-size: 2.8em;
+  margin-top: 1px;
+  margin-bottom: -45px;
+}
+
+mark { 
+  background-color: #ffad33;
+}
+
+.chum {
+  color: #ffad33;
+}
+
+.cat {
+  font-weight: bold;
+}
+
+@media (max-width: 650px) {
+  h1 {
+    
+  }
+  h2 {
+    
+  }
+  p {
+    
+  }
+}

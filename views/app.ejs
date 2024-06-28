@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>$tock Trade Generator</title>
+  <link href="/style2.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Xanh+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div>
+    <h1>💵 $tock Trade Generator</h1>
+    <h2>For Top 5 Best Performing Stocks Right Now</h2>
+    <p class='cat' align='center'>┍————- /ᐠ｡ꞈ｡ᐟ\ ————┑</p>
+    <p align='center'; style="color:#ffad33; font-size:15px; font-style:italic; font-weight:bold">Created by Hector Garingalao Sevilla</p>
+    <p class='cat' align='center'>┕————(..)(..) ∫∫————-┙</p>
+    <form action="/submit" method="post">
+      <p>
+        <label for="name">What is your First Name?</label>
+        <input type="text" id="name" name="name" required>
+      </p>
+      <p>
+        <label for="capital">What is your total initial capital?</label>
+        <input type="number" id="capital" name="capital" required>
+      </p>
+      <p>
+        <label for="stockCompany1">What is the name or symbol of stock company 1?</label>
+        <input type="text" id="stockCompany1" name="stockCompany1" required><br>
+        <label for="stock1Price">What is the current price of stock company 1?</label>
+        <input type="number" id="stock1Price" name="stock1Price" step="0.01" required>
+      </p>
+      <p>
+        <label for="stockCompany2">What is the name or symbol of stock company 2?</label>
+        <input type="text" id="stockCompany2" name="stockCompany2" required><br>
+        <label for="stock2Price">What is the current price of stock company 2?</label>
+        <input type="number" id="stock2Price" name="stock2Price" step="0.01" required>
+      </p>
+      <p>
+        <label for="stockCompany3">What is the name or symbol of stock company 3?</label>
+        <input type="text" id="stockCompany3" name="stockCompany3" required><br>
+        <label for="stock3Price">What is the current price of stock company 3?</label>
+        <input type="number" id="stock3Price" name="stock3Price" step="0.01" required>
+      </p>
+      <p>
+        <label for="stockCompany4">What is the name or symbol of stock company 4?</label>
+        <input type="text" id="stockCompany4" name="stockCompany4" required><br>
+        <label for="stock4Price">What is the current price of stock company 4?</label>
+        <input type="number" id="stock4Price" name="stock4Price" step="0.01" required>
+      </p>
+      <p>
+        <label for="stockCompany5">What is the name or symbol of stock company 5?</label>
+        <input type="text" id="stockCompany5" name="stockCompany5" required><br>
+        <label for="stock5Price">What is the current price of stock company 5?</label>
+        <input type="number" id="stock5Price" name="stock5Price" step="0.01" required>
+      </p>
+      <p>
+        <button type="submit">Submit</button>
+      </p>
+    </form>
+    <main></main>
+    <p align='center'><a href="https://www.barchart.com/stocks/highs-lows/highs?timeFrame=1m&orderBy=percentChange&orderDir=desc" target="_blank">👋 Top Market Leaders [US Exchanges 1-Month New Highs] Are Here!</a></p>
+    <p align='center'><a href="https://www.barchart.com/stocks/most-active/price-volume-leaders?orderBy=percentChange&orderDir=desc&viewName=main" target="_blank">👋 Top Market Leaders [US Exchanges Price Volume] Are Here!</a></p>
+    <p class="bottom" align='center'><a href="https://www.barchart.com/stocks/performance/percent-change/advances?viewName=technical&orderBy=opinion&orderDir=desc" target="_blank">👋 Top Market Leaders [US Exchanges Percent Change Advances] Are Here!</a></p>
+  </div>
+</body>
+</html>
