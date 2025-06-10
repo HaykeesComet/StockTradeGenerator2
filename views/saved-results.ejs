@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Saved Results - Stock Trade Generator</title>
+  <link href="/style3.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Xanh+Mono&display=swap" rel="stylesheet">
+  <style>
+    h1 a:hover {
+      font-weight: 1000 !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="font-size:38px; font-family:'Courier New'" align='center'><a href="/" style="color: #2080df; text-decoration: none;">💵 $tock Trade Generator</a></h1>
+    <h2 style="font-size:28px; font-family:'Courier New'" align='center'>Your Saved Results</h2>
+
+    <div align='center' style="margin: 20px 0;">
+      <button onclick="document.location='/app'" style="margin: 5px;">📊 New Analysis</button>
+      <button onclick="handleSignOut()" style="margin: 5px;">🚪 Logout</button>
+    </div>
+
+    <div id="savedResultsContainer">
+      <div id="loadingMessage" style="text-align: center;">Loading your saved results...</div>
+      <div id="noResultsMessage" style="text-align: center; display: none;">
+        <p>No saved results found.</p>
+        <p><a href="/app">Create your first stock analysis</a></p>
+      </div>
+      <div id="resultsContainer"></div>
+    </div>
+  </div>
+
+  <script type="module" src="/firebase-config.js"></script>
+  <script type="module">
+    let currentUser = null;
+
+    // Wait for Firebase to fully load before setting up auth listener
+    function waitForFirebase() {
+      if (typeof window.firebaseAuth !== 'undefined' && window.firebaseAuth) {
+        console.log('Firebase loaded, setting up auth listener');
+
+        // Set up auth state listener
+        window.firebaseAuth.onAuthStateChanged(async (user) => {
+          console.log('Auth state changed:', user ? user.email : 'No user');
+          if (user) {
+            currentUser = user;
+            await loadSavedResults();
+          } else {
+            // Redirect to login if not authenticated
+            console.log('No user found, redirecting to login');
+            window.location.href = '/login';
+          }
+        });
+      } else {
+        console.log('Firebase not loaded yet, waiting...');
+        setTimeout(waitForFirebase, 100);
+      }
+    }
+
+    // Start waiting for Firebase
+    waitForFirebase();
+
+    async function loadSavedResults() {
+      const loadingDiv = document.getElementById('loadingMessage');
+      const noResultsDiv = document.getElementById('noResultsMessage');
+      const resultsContainer = document.getElementById('resultsContainer');
+
+      console.log('Loading saved results for user:', currentUser.uid);
+
+      try {
+        // Check if getUserResults function is available
+        if (typeof window.getUserResults !== 'function') {
+          throw new Error('getUserResults function not available. Firebase may not be fully loaded.');
+        }
+
+        console.log('Calling getUserResults...');
+        const result = await window.getUserResults(currentUser.uid);
+        console.log('getUserResults result:', result);
+
+        loadingDiv.style.display = 'none';
+
+        if (result.success && result.results && result.results.length > 0) {
+          console.log('Found', result.results.length, 'results');
+          // Store results globally for the viewFullResult function
+          window.currentResults = result.results;
+          displayResults(result.results);
+        } else {
+          console.log('No results found or error:', result);
+          noResultsDiv.style.display = 'block';
+
+          // Show more detailed error if available
+          if (!result.success && result.error) {
+            noResultsDiv.innerHTML = `
+              <p>No saved results found.</p>
+              <p style="color: red; font-size: 12px;">Error: ${result.error}</p>
+              <p><a href="/app">Create your first stock analysis</a></p>
+            `;
+          }
+        }
+      } catch (error) {
+        console.error('Error loading results:', error);
+        loadingDiv.innerHTML = `<p style="color: red;">Error loading results: ${error.message}<br>Please refresh the page and try again.</p>`;
+      }
+    }
+
+    function displayResults(results) {
+      const container = document.getElementById('resultsContainer');
+      
+      results.forEach((result, index) => {
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'saved-result-item';
+        resultDiv.style.cssText = `
+          border: 2px solid #ffad33;
+          margin: 20px 0;
+          padding: 20px;
+          border-radius: 10px;
+          background-color: rgba(255, 255, 255, 0.1);
+        `;
+        
+        // Handle different date formats (Firestore timestamp vs regular Date)
+        let date, time;
+        if (result.createdAt && result.createdAt.seconds) {
+          // Firestore Timestamp format
+          date = new Date(result.createdAt.seconds * 1000).toLocaleDateString();
+          time = new Date(result.createdAt.seconds * 1000).toLocaleTimeString();
+        } else if (result.createdAt) {
+          // Regular Date format
+          const dateObj = new Date(result.createdAt);
+          date = dateObj.toLocaleDateString();
+          time = dateObj.toLocaleTimeString();
+        } else {
+          date = 'Unknown date';
+          time = '';
+        }
+        
+        resultDiv.innerHTML = `
+          <h3 style="font-family:'Courier New'; color: #2080df;">Analysis #${index + 1} - ${date} at ${time}</h3>
+          <p><strong>Name:</strong> ${result.name}</p>
+          <p><strong>Capital:</strong> $${result.capital}</p>
+          <p><strong>Stocks Analyzed:</strong> ${result.stockPrices.length}</p>
+          <div style="margin: 10px 0;">
+            <strong>Stock Details:</strong>
+            <ul>
+              ${result.stockPrices.map(stock => `<li>${stock.name}: $${stock.price}</li>`).join('')}
+            </ul>
+          </div>
+          <p><strong>Total Investment:</strong> $${result.totalInvestmentAmount.toFixed(2)}</p>
+          <div style="margin-top: 15px;">
+            <button onclick="viewFullResult('${result.id}')" style="margin: 5px; padding: 8px 16px; font-size: 14px; background-color: #2080df; color: white; border: none; border-radius: 5px; cursor: pointer;">👁️ View Full Details</button>
+            <button onclick="deleteResult('${result.id}', this)" style="margin: 5px; padding: 8px 16px; font-size: 14px; background-color: #ff4444; color: white; border: none; border-radius: 5px; cursor: pointer;">🗑️ Delete</button>
+          </div>
+        `;
+        
+        container.appendChild(resultDiv);
+      });
+    }
+
+    window.viewFullResult = function(resultId) {
+      // Find the result data by ID
+      const result = window.currentResults.find(r => r.id === resultId);
+      if (!result) {
+        alert('Result not found!');
+        return;
+      }
+
+      showDetailedModal(result);
+    };
+
+    window.deleteResult = async function(resultId, buttonElement) {
+      // Confirm deletion
+      const result = window.currentResults.find(r => r.id === resultId);
+      const resultName = result ? result.name : 'this result';
+
+      if (!confirm(`Are you sure you want to delete the analysis for "${resultName}"?\n\nThis action cannot be undone.`)) {
+        return;
+      }
+
+      // Disable button and show loading state
+      const originalText = buttonElement.innerHTML;
+      buttonElement.innerHTML = '🗑️ Deleting...';
+      buttonElement.disabled = true;
+
+      try {
+        // Check if delete function is available
+        if (typeof window.deleteStockResult !== 'function') {
+          throw new Error('Delete function not available. Firebase may not be fully loaded.');
+        }
+
+        console.log('Deleting result:', resultId);
+        const deleteResult = await window.deleteStockResult(resultId);
+
+        if (deleteResult.success) {
+          // Remove from UI immediately
+          const resultDiv = buttonElement.closest('.saved-result-item');
+          if (resultDiv) {
+            resultDiv.style.transition = 'opacity 0.3s ease-out';
+            resultDiv.style.opacity = '0';
+            setTimeout(() => {
+              resultDiv.remove();
+
+              // Update the global results array
+              window.currentResults = window.currentResults.filter(r => r.id !== resultId);
+
+              // Check if no results left
+              if (window.currentResults.length === 0) {
+                document.getElementById('noResultsMessage').style.display = 'block';
+              }
+            }, 300);
+          }
+
+          console.log('Result deleted successfully');
+        } else {
+          throw new Error(deleteResult.error || 'Failed to delete result');
+        }
+      } catch (error) {
+        console.error('Error deleting result:', error);
+        alert(`Error deleting result: ${error.message}`);
+
+        // Restore button state
+        buttonElement.innerHTML = originalText;
+        buttonElement.disabled = false;
+      }
+    };
+
+    function showDetailedModal(result) {
+      // Create modal overlay
+      const modalOverlay = document.createElement('div');
+      modalOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-y: auto;
+      `;
+
+      // Create modal content
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = `
+        background-color: white;
+        padding: 30px;
+        border-radius: 15px;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow-y: auto;
+        margin: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      `;
+
+      // Format date
+      let date, time;
+      if (result.createdAt && result.createdAt.seconds) {
+        date = new Date(result.createdAt.seconds * 1000).toLocaleDateString();
+        time = new Date(result.createdAt.seconds * 1000).toLocaleTimeString();
+      } else if (result.createdAt) {
+        const dateObj = new Date(result.createdAt);
+        date = dateObj.toLocaleDateString();
+        time = dateObj.toLocaleTimeString();
+      } else {
+        date = 'Unknown date';
+        time = '';
+      }
+
+      modalContent.innerHTML = `
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: #2080df; font-family: 'Courier New';">💵 Stock Trade Analysis</h1>
+          <h2 style="color: #333; font-family: 'Courier New';">Detailed Results</h2>
+          <p style="color: #666;">Analysis created on ${date} at ${time}</p>
+          <button onclick="this.closest('.modal-overlay').remove()" style="position: absolute; top: 15px; right: 20px; background: #ff4444; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 18px;">×</button>
+        </div>
+
+        <div style="margin-bottom: 20px; padding: 15px; background-color: #f0f8ff; border-radius: 10px;">
+          <h3 style="color: #2080df; margin-top: 0;">📊 Basic Information</h3>
+          <p><strong>Name:</strong> ${result.name}</p>
+          <p><strong>Total Initial Capital:</strong> $${result.capital}</p>
+          <p><strong>Number of Stocks:</strong> ${result.stockPrices.length}</p>
+        </div>
+
+        <div style="margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 10px;">
+          <h3 style="color: #2080df; margin-top: 0;">📈 Stock Prices</h3>
+          ${result.stockPrices.map(stock => `
+            <p>Current price for '<em>${stock.name}</em>' is <strong>$${stock.price}</strong></p>
+          `).join('')}
+        </div>
+
+        <div style="margin-bottom: 20px; padding: 15px; background-color: #f0fff0; border-radius: 10px;">
+          <h3 style="color: #2080df; margin-top: 0;">💻 Amounts for Robinhood</h3>
+          ${result.investments ? result.investments.map(investment => `
+            <p><em>Amount to 'BUY' for <strong>${investment.name}</strong> is <mark><strong><u>$${investment.amount.toFixed(2)}</u></strong></mark></em></p>
+          `).join('') : '<p>Investment data not available</p>'}
+        </div>
+
+        <div style="margin-bottom: 20px; padding: 15px; background-color: #fff8f0; border-radius: 10px;">
+          <h3 style="color: #2080df; margin-top: 0;">📊 Number of Shares for E*TRADE</h3>
+          ${result.shares ? result.shares.map(share => `
+            <p>Number of shares to 'BUY' for <strong>${share.name}</strong> is <mark><strong><u>${share.shares}</u></strong></mark></p>
+          `).join('') : '<p>Shares data not available</p>'}
+        </div>
+
+        <div style="margin-bottom: 20px; padding: 15px; background-color: #f8f0ff; border-radius: 10px;">
+          <h3 style="color: #2080df; margin-top: 0;">📈 Investment Percentages</h3>
+          ${result.percentages ? result.percentages.map(percentage => `
+            <p><strong>${percentage.name}</strong>: ${percentage.percent}% of total capital</p>
+          `).join('') : '<p>Percentage data not available</p>'}
+        </div>
+
+        <div style="margin-bottom: 20px; padding: 15px; background-color: #f0f0f8; border-radius: 10px;">
+          <h3 style="color: #2080df; margin-top: 0;">📋 Summary</h3>
+          <p><strong>Average Shares to Buy:</strong> ${result.shareBuyAverage ? result.shareBuyAverage.toFixed(2) : 'N/A'}</p>
+          <p><strong>Total Investment Amount (Robinhood):</strong> $${result.totalInvestmentAmount ? result.totalInvestmentAmount.toFixed(2) : 'N/A'}</p>
+          <p><strong>Total Investment Amount (E*TRADE):</strong> $${result.totalAmountShares ? result.totalAmountShares.toFixed(2) : 'N/A'}</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+          <button onclick="this.closest('.modal-overlay').remove()" style="background-color: #2080df; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; margin: 5px;">Close</button>
+          <button onclick="deleteResultFromModal('${result.id}', this)" style="background-color: #ff4444; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; margin: 5px;">🗑️ Delete This Result</button>
+        </div>
+      `;
+
+      modalOverlay.className = 'modal-overlay';
+      modalOverlay.appendChild(modalContent);
+      document.body.appendChild(modalOverlay);
+
+      // Close modal when clicking outside
+      modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+          modalOverlay.remove();
+        }
+      });
+
+      // Close modal with Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          modalOverlay.remove();
+        }
+      });
+    }
+
+    window.deleteResultFromModal = async function(resultId, buttonElement) {
+      // Find the result for confirmation
+      const result = window.currentResults.find(r => r.id === resultId);
+      const resultName = result ? result.name : 'this result';
+
+      if (!confirm(`Are you sure you want to delete the analysis for "${resultName}"?\n\nThis action cannot be undone.`)) {
+        return;
+      }
+
+      // Disable button and show loading state
+      const originalText = buttonElement.innerHTML;
+      buttonElement.innerHTML = '🗑️ Deleting...';
+      buttonElement.disabled = true;
+
+      try {
+        console.log('Deleting result from modal:', resultId);
+        const deleteResult = await window.deleteStockResult(resultId);
+
+        if (deleteResult.success) {
+          // Close the modal
+          buttonElement.closest('.modal-overlay').remove();
+
+          // Remove from UI
+          const resultDivs = document.querySelectorAll('.saved-result-item');
+          resultDivs.forEach(div => {
+            const viewButton = div.querySelector('button[onclick*="viewFullResult"]');
+            if (viewButton && viewButton.getAttribute('onclick').includes(resultId)) {
+              div.style.transition = 'opacity 0.3s ease-out';
+              div.style.opacity = '0';
+              setTimeout(() => {
+                div.remove();
+
+                // Update the global results array
+                window.currentResults = window.currentResults.filter(r => r.id !== resultId);
+
+                // Check if no results left
+                if (window.currentResults.length === 0) {
+                  document.getElementById('noResultsMessage').style.display = 'block';
+                }
+              }, 300);
+            }
+          });
+
+          console.log('Result deleted successfully from modal');
+        } else {
+          throw new Error(deleteResult.error || 'Failed to delete result');
+        }
+      } catch (error) {
+        console.error('Error deleting result from modal:', error);
+        alert(`Error deleting result: ${error.message}`);
+
+        // Restore button state
+        buttonElement.innerHTML = originalText;
+        buttonElement.disabled = false;
+      }
+    };
+
+    window.handleSignOut = async function() {
+      try {
+        if (typeof window.signOutUser === 'function') {
+          const result = await window.signOutUser();
+          if (result.success) {
+            window.location.href = '/';
+          } else {
+            console.error('Sign out failed:', result.error);
+            window.location.href = '/';
+          }
+        } else {
+          console.log('Firebase not loaded, redirecting to home');
+          window.location.href = '/';
+        }
+      } catch (error) {
+        console.error('Sign out error:', error);
+        window.location.href = '/';
+      }
+    };
+  </script>
+</body>
+</html>

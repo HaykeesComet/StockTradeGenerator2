@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Test</title>
+</head>
+<body>
+    <h1>Firebase Connection Test</h1>
+    <button onclick="testFirebase()">Test Firebase Connection</button>
+    <div id="result"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlHolfcs-5KGCjpW7Xl4SyoaNH2tqdGUs",
+            authDomain: "stock-trade-generator.firebaseapp.com",
+            projectId: "stock-trade-generator",
+            storageBucket: "stock-trade-generator.firebasestorage.app",
+            messagingSenderId: "595408003505",
+            appId: "1:595408003505:web:72432afb97445da9745d90",
+            measurementId: "G-3P6T7EMNV3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        window.testFirebase = async function() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing Firebase connection...';
+            
+            try {
+                // Test with a dummy email to see if auth is configured
+                const testEmail = 'test@example.com';
+                const testPassword = 'testpassword123';
+                
+                await createUserWithEmailAndPassword(auth, testEmail, testPassword);
+                resultDiv.innerHTML = '<span style="color: green;">✅ Firebase Authentication is working!</span>';
+            } catch (error) {
+                resultDiv.innerHTML = `<span style="color: red;">❌ Error: ${error.code} - ${error.message}</span>`;
+                console.error('Firebase error:', error);
+            }
+        };
+    </script>
+</body>
+</html>

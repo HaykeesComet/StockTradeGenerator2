@@ -14,9 +14,47 @@
     <p align='center' class='cat'>┍————- /ᐠ｡ꞈ｡ᐟ\ ————┑</p>
     <p align='center'; style="color:#ffad33; font-size:15px; font-style:italic; font-weight:bold">Created by Hector Garingalao Sevilla</p>
     <p align='center' class='cat'>┕————(..)(..) ∫∫————-┙</p>
-    <p align='center'><button onclick="document.location='/app'">Begin App</button></p>
-    <main></main>  
+    <!-- Show different buttons based on authentication status -->
+    <div class="no-auth-required">
+      <p align='center'><button onclick="document.location='/login'">Login</button></p>
+      <p align='center'><button onclick="document.location='/signup'">Sign Up</button></p>
+      <p align='center'><a href="/app" style="color: #ffad33; text-decoration: underline;">Continue as Guest</a></p>
+    </div>
+
+    <div class="auth-required" style="display: none;">
+      <p align='center'><button onclick="document.location='/app'">Begin App</button></p>
+      <p align='center'><button onclick="document.location='/saved-results'">View Saved Results</button></p>
+      <p align='center'><button onclick="handleSignOut()" style="background-color: #f44336;">Logout</button></p>
+    </div>
+
+    <main></main>
     <p><a href="https://app.webull.com/trade" target="_blank">👋 Realtime Stock Charts Here!</a></p>
   </div>
+
+  <script type="module" src="/firebase-config.js"></script>
+  <script type="module">
+    window.handleSignOut = async function() {
+      try {
+        // Check if Firebase is loaded and user is signed in
+        if (typeof window.signOutUser === 'function') {
+          const result = await window.signOutUser();
+          if (result.success) {
+            console.log('Sign out successful');
+            window.location.reload();
+          } else {
+            console.error('Sign out failed:', result.error);
+            alert('Error signing out: ' + result.error);
+          }
+        } else {
+          console.log('Firebase not loaded, just reloading page');
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error('Sign out error:', error);
+        // Don't show alert for sign-out errors, just reload
+        window.location.reload();
+      }
+    };
+  </script>
 </body>
 </html>

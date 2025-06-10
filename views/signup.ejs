@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Sign Up - $tock Trade Generator</title>
+  <link href="/style.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Xanh+Mono&display=swap" rel="stylesheet">
+  <style>
+    h1 a:hover {
+      font-weight: 1000 !important;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h1><a href="/" style="color: #2080df; text-decoration: none;">💵 $tock Trade Generator</a></h1>
+    <h2>Create Your Account</h2>
+    <p class='cat' align='center'>┍————- /ᐠ｡ꞈ｡ᐟ\ ————┑</p>
+    <p align='center'; style="color:#ffad33; font-size:15px; font-style:italic; font-weight:bold">Created by Hector Garingalao Sevilla</p>
+    <p class='cat' align='center'>┕————(..)(..) ∫∫————-┙</p>
+    
+    <div id="signupForm">
+      <form id="signupFormElement">
+        <p>
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+        </p>
+        <p>
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required minlength="6">
+        </p>
+        <p>
+          <label for="confirmPassword">Confirm Password:</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" required minlength="6">
+        </p>
+        <p>
+          <button type="submit">Sign Up</button>
+        </p>
+      </form>
+      
+      <p align="center">
+        Already have an account? <a href="/login">Login here</a>
+      </p>
+
+      <p align="center">
+        <a href="/app" style="color: #ffad33; text-decoration: underline;">Continue as Guest</a>
+      </p>
+    </div>
+    
+    <div id="errorMessage" style="color: red; text-align: center; display: none;"></div>
+    <div id="successMessage" style="color: green; text-align: center; display: none;"></div>
+    <div id="loadingMessage" style="text-align: center; display: none;">Creating account...</div>
+    
+    <main></main>
+  </div>
+
+  <script type="module" src="/firebase-config.js"></script>
+  <script type="module">
+    document.getElementById('signupFormElement').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const errorDiv = document.getElementById('errorMessage');
+      const successDiv = document.getElementById('successMessage');
+      const loadingDiv = document.getElementById('loadingMessage');
+      
+      // Reset messages
+      errorDiv.style.display = 'none';
+      successDiv.style.display = 'none';
+      
+      // Validate passwords match
+      if (password !== confirmPassword) {
+        errorDiv.textContent = 'Passwords do not match.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      
+      // Show loading
+      loadingDiv.style.display = 'block';
+      
+      try {
+        const result = await window.signUp(email, password);
+        
+        if (result.success) {
+          successDiv.textContent = 'Account created successfully! Redirecting...';
+          successDiv.style.display = 'block';
+          
+          // Redirect to main app after a short delay
+          setTimeout(() => {
+            window.location.href = '/app';
+          }, 2000);
+        } else {
+          errorDiv.textContent = result.error;
+          errorDiv.style.display = 'block';
+        }
+      } catch (error) {
+        errorDiv.textContent = 'Sign up failed. Please try again.';
+        errorDiv.style.display = 'block';
+      }
+      
+      loadingDiv.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

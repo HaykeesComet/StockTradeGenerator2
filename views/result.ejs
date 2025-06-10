@@ -5,10 +5,15 @@
   <meta charset="UTF-8">
   <title>Stock Trade Results</title>
   <link href="/style3.css" rel="stylesheet">
+  <style>
+    h1 a:hover {
+      font-weight: 1000 !important;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1 style="font-size:38px; font-family:'Courier New'" align='center'>💵 $tock Trade Generator</h1>
+    <h1 style="font-size:38px; font-family:'Courier New'" align='center'><a href="/" style="color: #2080df; text-decoration: none;">💵 $tock Trade Generator</a></h1>
     <h2 style="font-size:28px; font-family:'Courier New'" align='center'>For Top Best Performing Stocks Right Now</h2>
 
     <p align='center'>░▒▓█ ░▒▓█▓▒░▒▓█▓▒░▒▓</p>
@@ -53,10 +58,16 @@
     <div align='center' style="margin: 20px 0;">
       <button onclick="printPage()" style="margin: 5px; padding: 2px;">🖨️ Print Page</button>
       <button onclick="saveAsImage()" style="margin: 5px; padding: 2px;">📷 Save as Image</button>
+      <button onclick="saveResults()" style="margin: 5px;" class="auth-required" id="saveBtn">💾 Save Results</button>
     </div>
 
     <div align='center' style="margin: 10px 0;">
-      <button onclick="document.location='/'" style="margin: 5px;">👋 Start Over</button>
+      <button onclick="document.location='/saved-results'" style="margin: 5px;" class="auth-required">📁 View Saved Results</button>
+      <button onclick="document.location='/app'" style="margin: 5px;">👋 Start Over</button>
+    </div>
+
+    <div class="no-auth-required" style="text-align: center; margin: 10px 0; color: #666;">
+      <p><a href="/login">Login</a> to save your results for future reference.</p>
     </div>
   </div>
 
@@ -94,6 +105,161 @@
         alert('Error saving image. Please try again or use the print function.');
       });
     }
+
+    // Firebase functionality
+    let currentUser = null;
+    let resultsData = {
+      name: '<%= name %>',
+      capital: <%= capital %>,
+      stockPrices: <%- JSON.stringify(stockPrices) %>,
+      investments: <%- JSON.stringify(investments) %>,
+      shares: <%- JSON.stringify(shares) %>,
+      percentages: <%- JSON.stringify(percentages) %>,
+      shareBuyAverage: <%= shareBuyAverage %>,
+      totalInvestmentAmount: <%= totalInvestmentAmount %>,
+      totalAmountShares: <%= totalAmountShares %>
+    };
+
+    async function saveResults() {
+      console.log('Save results called');
+      console.log('Current user:', currentUser);
+
+      // Check if Firebase is loaded
+      if (typeof window.firebaseAuth === 'undefined') {
+        alert('Firebase is not loaded. Please refresh the page and try again.');
+        return;
+      }
+
+      // Check if user is authenticated
+      if (!currentUser) {
+        alert('Please login to save your results.');
+        window.location.href = '/login';
+        return;
+      }
+
+      const saveBtn = document.getElementById('saveBtn');
+      if (!saveBtn) {
+        console.error('Save button not found');
+        return;
+      }
+
+      const originalText = saveBtn.innerHTML;
+      saveBtn.innerHTML = '💾 Saving...';
+      saveBtn.disabled = true;
+
+      try {
+        console.log('Attempting client-side save to Firestore...');
+
+        // Try client-side saving first (works with current Firebase setup)
+        if (typeof window.saveStockResults === 'function') {
+          console.log('Using client-side Firebase save');
+          const result = await window.saveStockResults(currentUser.uid, resultsData);
+
+          if (result.success) {
+            alert('Results saved successfully!');
+            saveBtn.innerHTML = '✅ Saved';
+            setTimeout(() => {
+              saveBtn.innerHTML = originalText;
+              saveBtn.disabled = false;
+            }, 2000);
+            return;
+          } else {
+            console.log('Client-side save failed, trying server-side...');
+          }
+        }
+
+        // Fallback to server-side saving
+        console.log('Getting ID token for server-side save...');
+        const idToken = await currentUser.getIdToken();
+        console.log('ID token obtained');
+
+        console.log('Sending data to server:', resultsData);
+
+        const response = await fetch('/api/save-results', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}`
+          },
+          body: JSON.stringify(resultsData)
+        });
+
+        console.log('Response status:', response.status);
+
+        const result = await response.json();
+        console.log('Server response:', result);
+
+        if (result.success) {
+          alert('Results saved successfully!');
+          saveBtn.innerHTML = '✅ Saved';
+          setTimeout(() => {
+            saveBtn.innerHTML = originalText;
+            saveBtn.disabled = false;
+          }, 2000);
+        } else {
+          // Handle server-side Firebase not configured
+          if (result.instructions && Array.isArray(result.instructions)) {
+            const instructionsText = result.instructions.join('\n');
+            alert(`Server-side saving not available.\n\n${result.error}\n\nTo enable server-side saving:\n${instructionsText}\n\nNote: Client-side saving should work without additional setup.`);
+          } else {
+            alert(`Error: ${result.error || 'Failed to save results'}`);
+          }
+          saveBtn.innerHTML = originalText;
+          saveBtn.disabled = false;
+        }
+      } catch (error) {
+        console.error('Error saving results:', error);
+
+        // Try to get more detailed error info
+        let errorMessage = error.message;
+        if (error.message.includes('HTTP error! status: 500')) {
+          errorMessage = 'Server configuration issue. Client-side Firebase should still work.';
+        }
+
+        alert(`Error saving results: ${errorMessage}`);
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+      }
+    }
+  </script>
+
+  <script type="module" src="/firebase-config.js"></script>
+  <script type="module">
+    // Wait for Firebase to load, then check authentication state
+    let firebaseLoadAttempts = 0;
+    const maxAttempts = 50; // 5 seconds max wait
+
+    function waitForFirebase() {
+      if (typeof window.firebaseAuth !== 'undefined' && window.firebaseAuth) {
+        console.log('Firebase loaded, setting up auth listener');
+        window.firebaseAuth.onAuthStateChanged((user) => {
+          console.log('Auth state changed:', user ? user.email : 'No user');
+          currentUser = user;
+
+          // Update UI based on auth state
+          const authElements = document.querySelectorAll('.auth-required');
+          const noAuthElements = document.querySelectorAll('.no-auth-required');
+
+          if (user) {
+            authElements.forEach(el => el.style.display = 'inline-block');
+            noAuthElements.forEach(el => el.style.display = 'none');
+          } else {
+            authElements.forEach(el => el.style.display = 'none');
+            noAuthElements.forEach(el => el.style.display = 'block');
+          }
+        });
+      } else if (firebaseLoadAttempts < maxAttempts) {
+        firebaseLoadAttempts++;
+        setTimeout(waitForFirebase, 100);
+      } else {
+        console.error('Firebase failed to load after 5 seconds');
+        // Hide auth-required elements if Firebase fails to load
+        const authElements = document.querySelectorAll('.auth-required');
+        authElements.forEach(el => el.style.display = 'none');
+      }
+    }
+
+    waitForFirebase();
   </script>
 </body>
 </html>

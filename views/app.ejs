@@ -6,14 +6,32 @@
   <link href="/style2.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Xanh+Mono&display=swap" rel="stylesheet">
+  <style>
+    h1 a:hover {
+      font-weight: 1000 !important;
+    }
+  </style>
 </head>
 <body>
   <div>
-    <h1>💵 $tock Trade Generator</h1>
+    <h1><a href="/" style="color: #2080df; text-decoration: none;">💵 $tock Trade Generator</a></h1>
     <h2>For Top 5 Best Performing Stocks Right Now</h2>
     <p class='cat' align='center'>┍————- /ᐠ｡ꞈ｡ᐟ\ ————┑</p>
-    <p align='center'; style="color:#ffad33; font-size:15px; font-style:italic; font-weight:bold">Created by Hector Garingalao Sevilla</p>
+    <p align='center'; style="color:#ed4a1a; font-size:15px; font-style:italic; font-weight:bold">Created by Hector Garingalao Sevilla</p>
     <p class='cat' align='center'>┕————(..)(..) ∫∫————-┙</p>
+
+    <!-- Authentication status display -->
+    <div class="auth-required" style="display: none; text-align: center; margin: 10px 0;">
+      <p style="color: #2080df;">Welcome back! <span id="userEmail"></span></p>
+      <p>
+        <a href="/saved-results" style="margin: 0 10px;">📁 View Saved Results</a>
+        <a href="#" onclick="handleSignOut()" style="margin: 0 10px;">🚪 Logout</a>
+      </p>
+    </div>
+
+    <div class="no-auth-required" style="text-align: center; margin: 10px 0;">
+      <p style="color: #666;">You're using guest mode. <a href="/login">Login</a> to save your results.</p>
+    </div>
     <form action="/submit" method="post" id="stockForm">
       <p>
         <label for="name">What is your First Name?</label>
@@ -96,6 +114,42 @@
         this.appendChild(hiddenInput);
       });
     </script>
+
+    <script type="module" src="/firebase-config.js"></script>
+    <script type="module">
+      let currentUser = null;
+
+      // Check authentication state
+      window.firebaseAuth.onAuthStateChanged((user) => {
+        currentUser = user;
+        if (user) {
+          document.getElementById('userEmail').textContent = user.email;
+        }
+      });
+
+      window.handleSignOut = async function() {
+        try {
+          if (typeof window.signOutUser === 'function') {
+            const result = await window.signOutUser();
+            if (result.success) {
+              window.location.href = '/';
+            } else {
+              console.error('Sign out failed:', result.error);
+              // Still redirect even if sign out fails
+              window.location.href = '/';
+            }
+          } else {
+            console.log('Firebase not loaded, redirecting to home');
+            window.location.href = '/';
+          }
+        } catch (error) {
+          console.error('Sign out error:', error);
+          // Don't show alert, just redirect
+          window.location.href = '/';
+        }
+      };
+    </script>
+
     <main></main>
     <p align='center'><a href="https://www.barchart.com/stocks/highs-lows/highs?timeFrame=1m&orderBy=percentChange&orderDir=desc" target="_blank">👋 Top Market Leaders [US Exchanges 1-Month New Highs] Are Here!</a></p>
     <p align='center'><a href="https://www.barchart.com/stocks/most-active/price-volume-leaders?orderBy=percentChange&orderDir=desc&viewName=main" target="_blank">👋 Top Market Leaders [US Exchanges Price Volume] Are Here!</a></p>

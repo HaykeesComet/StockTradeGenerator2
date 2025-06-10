@@ -3,7 +3,7 @@ html {
 }
 
 body {
-  color: #330000;
+  color: #000000;
   font-family: 'Xanh Mono', monospace;
   box-sizing: ;
   background-color: ;
@@ -42,22 +42,22 @@ p {
 
 a {
   text-decoration: none;
-  color: #330000;
+  color: #1d1202;
 }
 
 /* unvisited link */
 a:link {
-  color: #330000;
+  color: #1d1202;
 }
 
 /* visited link */
 a:visited {
-  color: #330000;
+  color: #1d1202;
 }
 
 /* mouse over link */
 a:hover {
-  color: #330000;
+  color: #1d1202;
   font-weight: 1000;
 }
 
