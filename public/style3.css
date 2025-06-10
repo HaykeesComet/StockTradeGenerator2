@@ -4,7 +4,7 @@ html {
 
 body {
   color: #330000;
-  font-family: 'Xanh Mono', monospace;
+  font-family: 'Courier New', monospace;
   box-sizing: ;
   background-color: ;
   background: url("White.jpg");
@@ -83,6 +83,51 @@ button {
 
 button:hover {
   background-color: #e0e0d1;
+}
+
+/* Action buttons for print and save */
+button[onclick*="printPage"], button[onclick*="saveAsImage"] {
+  width: 180px;
+  padding: 12px 24px;
+  font-size: 16px;
+  margin: 5px;
+  font-family: 'Xanh Mono', monospace;
+  font-weight: 900;
+}
+
+button[onclick*="printPage"] {
+  background-color: #4CAF50;
+  color: white;
+}
+
+button[onclick*="printPage"]:hover {
+  background-color: #45a049;
+}
+
+button[onclick*="saveAsImage"] {
+  background-color: #2196F3;
+  color: white;
+}
+
+button[onclick*="saveAsImage"]:hover {
+  background-color: #1976D2;
+}
+
+/* Print-specific styles */
+@media print {
+  button {
+    display: none !important;
+  }
+
+  .container {
+    margin: 0;
+    padding: 20px;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
 }
 
 .logo {

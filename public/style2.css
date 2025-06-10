@@ -85,6 +85,40 @@ button:hover {
   background-color: #e0e0d1;
 }
 
+.add-btn, .remove-btn {
+  width: 150px;
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 16px;
+}
+
+.add-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.add-btn:hover {
+  background-color: #45a049;
+}
+
+.remove-btn {
+  background-color: #f44336;
+  color: white;
+  display: none;
+}
+
+.remove-btn:hover {
+  background-color: #da190b;
+}
+
+.stock-entry {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 .logo {
   color: #a6a6a6;
   font-size: 2.8em;

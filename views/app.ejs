@@ -14,7 +14,7 @@
     <p class='cat' align='center'>┍————- /ᐠ｡ꞈ｡ᐟ\ ————┑</p>
     <p align='center'; style="color:#ffad33; font-size:15px; font-style:italic; font-weight:bold">Created by Hector Garingalao Sevilla</p>
     <p class='cat' align='center'>┕————(..)(..) ∫∫————-┙</p>
-    <form action="/submit" method="post">
+    <form action="/submit" method="post" id="stockForm">
       <p>
         <label for="name">What is your First Name?</label>
         <input type="text" id="name" name="name" required>
@@ -23,40 +23,79 @@
         <label for="capital">What is your total initial capital?</label>
         <input type="number" id="capital" name="capital" required>
       </p>
+
+      <div id="stockEntries">
+        <!-- Stock entries will be dynamically generated here -->
+      </div>
+
       <p>
-        <label for="stockCompany1">What is the name or symbol of stock company 1?</label>
-        <input type="text" id="stockCompany1" name="stockCompany1" required><br>
-        <label for="stock1Price">What is the current price of stock company 1?</label>
-        <input type="number" id="stock1Price" name="stock1Price" step="0.01" required>
+        <button type="button" id="addStockBtn" class="add-btn">➕ Add Stock</button>
+        <button type="button" id="removeStockBtn" class="remove-btn">➖ Remove Stock</button>
       </p>
-      <p>
-        <label for="stockCompany2">What is the name or symbol of stock company 2?</label>
-        <input type="text" id="stockCompany2" name="stockCompany2" required><br>
-        <label for="stock2Price">What is the current price of stock company 2?</label>
-        <input type="number" id="stock2Price" name="stock2Price" step="0.01" required>
-      </p>
-      <p>
-        <label for="stockCompany3">What is the name or symbol of stock company 3?</label>
-        <input type="text" id="stockCompany3" name="stockCompany3" required><br>
-        <label for="stock3Price">What is the current price of stock company 3?</label>
-        <input type="number" id="stock3Price" name="stock3Price" step="0.01" required>
-      </p>
-      <p>
-        <label for="stockCompany4">What is the name or symbol of stock company 4?</label>
-        <input type="text" id="stockCompany4" name="stockCompany4" required><br>
-        <label for="stock4Price">What is the current price of stock company 4?</label>
-        <input type="number" id="stock4Price" name="stock4Price" step="0.01" required>
-      </p>
-      <p>
-        <label for="stockCompany5">What is the name or symbol of stock company 5?</label>
-        <input type="text" id="stockCompany5" name="stockCompany5" required><br>
-        <label for="stock5Price">What is the current price of stock company 5?</label>
-        <input type="number" id="stock5Price" name="stock5Price" step="0.01" required>
-      </p>
+
       <p>
         <button type="submit">Submit</button>
       </p>
     </form>
+
+    <script>
+      let stockCount = 0;
+
+      function addStockEntry() {
+        stockCount++;
+        const stockEntries = document.getElementById('stockEntries');
+
+        const stockDiv = document.createElement('div');
+        stockDiv.className = 'stock-entry';
+        stockDiv.id = `stock-${stockCount}`;
+
+        stockDiv.innerHTML = `
+          <p>
+            <label for="stockCompany${stockCount}">What is the name or symbol of stock company ${stockCount}?</label>
+            <input type="text" id="stockCompany${stockCount}" name="stockCompany${stockCount}" required><br>
+            <label for="stock${stockCount}Price">What is the current price of stock company ${stockCount}?</label>
+            <input type="number" id="stock${stockCount}Price" name="stock${stockCount}Price" step="0.01" required>
+          </p>
+        `;
+
+        stockEntries.appendChild(stockDiv);
+        updateRemoveButtonVisibility();
+      }
+
+      function removeStockEntry() {
+        if (stockCount > 5) {
+          const stockToRemove = document.getElementById(`stock-${stockCount}`);
+          stockToRemove.remove();
+          stockCount--;
+          updateRemoveButtonVisibility();
+        }
+      }
+
+      function updateRemoveButtonVisibility() {
+        const removeBtn = document.getElementById('removeStockBtn');
+        removeBtn.style.display = stockCount > 5 ? 'inline-block' : 'none';
+      }
+
+      // Initialize with 5 stock entries
+      addStockEntry();
+      addStockEntry();
+      addStockEntry();
+      addStockEntry();
+      addStockEntry();
+
+      // Event listeners
+      document.getElementById('addStockBtn').addEventListener('click', addStockEntry);
+      document.getElementById('removeStockBtn').addEventListener('click', removeStockEntry);
+
+      // Add hidden input to track stock count on form submission
+      document.getElementById('stockForm').addEventListener('submit', function() {
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'stockCount';
+        hiddenInput.value = stockCount;
+        this.appendChild(hiddenInput);
+      });
+    </script>
     <main></main>
     <p align='center'><a href="https://www.barchart.com/stocks/highs-lows/highs?timeFrame=1m&orderBy=percentChange&orderDir=desc" target="_blank">👋 Top Market Leaders [US Exchanges 1-Month New Highs] Are Here!</a></p>
     <p align='center'><a href="https://www.barchart.com/stocks/most-active/price-volume-leaders?orderBy=percentChange&orderDir=desc&viewName=main" target="_blank">👋 Top Market Leaders [US Exchanges Price Volume] Are Here!</a></p>

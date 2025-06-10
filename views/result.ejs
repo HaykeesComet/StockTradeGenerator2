@@ -9,49 +9,91 @@
 <body>
   <div class="container">
     <h1 style="font-size:38px; font-family:'Courier New'" align='center'>💵 $tock Trade Generator</h1>
-    <h2 style="font-size:28px; font-family:'Courier New'" align='center'>For Top 5 Best Performing Stocks Right Now</h2>
+    <h2 style="font-size:28px; font-family:'Courier New'" align='center'>For Top Best Performing Stocks Right Now</h2>
 
     <p align='center'>░▒▓█ ░▒▓█▓▒░▒▓█▓▒░▒▓</p>
     <p align="center"><img src="/Stock.jpg" width="605" height="454" alt="Stock Image"></p>
     <p align='center'>░▒▓█ ░▒▓█▓▒░▒▓█▓▒░▒▓</p>
 
-    <h3 style="font-size:20px; font-family:'Courier New'"><center>You're total initial capital is <%= capital %>.</center></h3>
-    <p><center>Current price for <%= stockCompany1 %> is <%= stock1Price %>.</center></p>
-    <p><center>Current price for <%= stockCompany2 %> is <%= stock2Price %>.</center></p>
-    <p><center>Current price for <%= stockCompany3 %> is <%= stock3Price %>.</center></p>
-    <p><center>Current price for <%= stockCompany4 %> is <%= stock4Price %>.</center></p>
-    <p><center>Current price for <%= stockCompany5 %> is <%= stock5Price %>.</center></p>
+    <h3 style="font-size:20px; font-family:'Courier New'"><center>You're total initial capital is <%= capital %> USD.</center></h3>
+    <% stockPrices.forEach(function(stock) { %>
+      <p><center>Current price for '<i><%= stock.name %></i>' is <b><%= stock.price %></b>.</center></p>
+    <% }); %>
 
     <center>💻</center>
 
     <h3 style="font-size:20px; font-family:'Courier New'"><center>Amounts for Robinhood</center></h3>
-    <p><i><center>Amount to 'BUY' for <b><%= stockCompany1 %></b> is <mark><b><u><%= stock1InvestAmount.toFixed(2) %></u></b></mark>.</center></i></p>
-    <p><i><center>Amount to 'BUY' for <b><%= stockCompany2 %></b> is <mark><b><u><%= stock2InvestAmount.toFixed(2) %></u></b></mark>.</center></i></p>
-    <p><i><center>Amount to 'BUY' for <b><%= stockCompany3 %></b> is <mark><b><u><%= stock3InvestAmount.toFixed(2) %></u></b></mark>.</center></i></p>
-    <p><i><center>Amount to 'BUY' for <b><%= stockCompany4 %></b> is <mark><b><u><%= stock4InvestAmount.toFixed(2) %></u></b></mark>.</center></i></p>
-    <p><i><center>Amount to 'BUY' for <b><%= stockCompany5 %></b> is <mark><b><u><%= stock5InvestAmount.toFixed(2) %></u></b></mark>.</center></i></p>
+    <% investments.forEach(function(investment) { %>
+      <p><i><center>Amount to 'BUY' for <b><%= investment.name %></b> is <mark><b><u><%= investment.amount.toFixed(2) %></u></b></mark>.</center></i></p>
+    <% }); %>
 
     <center>📲</center>
 
     <h3 style="font-size:20px; font-family:'Courier New'"><center>Shares for E*TRADE</center></h3>
-    <p><i><center>Number of equal shares to 'BUY' for <b><%= stockCompany1 %></b>, <b><%= stockCompany2 %></b>, <b><%= stockCompany3 %></b>, <b><%= stockCompany4 %></b> and <b><%= stockCompany5 %></b> is <mark><b><u><%= shareBuyAverage %></u></b></mark> 'each'.</center></i></p>
+    <p><i><center>Number of equal shares to 'BUY' for
+      <% stockPrices.forEach(function(stock, index) { %>
+        <b><%= stock.name %></b><% if (index < stockPrices.length - 1) { %>, <% } %>
+      <% }); %>
+      is <mark><b><u><%= shareBuyAverage %></u></b></mark> 'each'.</center></i></p>
 
     <h4 style="font-size:16px; font-family:'Courier New'"><b><center>☞ Note that if you get a <i>0</i>, that means <i><u>INCALCULABLE</u></i>. ☜</center></b></h4>
 
     <h3><center>Ⰶ║ ⵈ ⵈ ⵈ ⵈ ⵈ ⵈ║Ⰶ</center></h3>
     <p align="center"><img src="/Horn.jpg" width="648" height="432" alt="Horn Image"></p>
 
-    <h3 style="font-size:18px; font-family:'Courier New'" align="center">☝ Just for checking purposes, you're total invested amount for all 5 stocks in 'Robinhood' is <%= totalInvestmentAmount.toFixed(2) %> USD. Or, if using 'E*TRADE', then your total invested amount for all 5 stocks is <%= totalAmountShares.toFixed(2) %> USD.</h3>
+    <h3 style="font-size:18px; font-family:'Courier New'" align="center">☝ Just for checking purposes, you're total invested amount for all <%= stockPrices.length %> stocks in 'Robinhood' is <%= totalInvestmentAmount.toFixed(2) %> USD. Or, if using 'E*TRADE', then your total invested amount for all <%= stockPrices.length %> stocks is <%= totalAmountShares.toFixed(2) %> USD.</h3>
 
     <h3 style="font-size:18px; font-family:'Courier New'"><center>🥧 You're slice of the pie from your 'Total Investment Capital' down below:</center></h3>
-    <h4 style="font-size:18px; font-family:'Courier New'" align="center">✱ <%= stockCompany1 %> comprises <%= stock1Percent %> %</h4>
-    <h4 style="font-size:18px; font-family:'Courier New'" align="center">✱ <%= stockCompany2 %> comprises <%= stock2Percent %> %</h4>
-    <h4 style="font-size:18px; font-family:'Courier New'" align="center">✱ <%= stockCompany3 %> comprises <%= stock3Percent %> %</h4>
-    <h4 style="font-size:18px; font-family:'Courier New'" align="center">✱ <%= stockCompany4 %> comprises <%= stock4Percent %> %</h4>
-    <h4 style="font-size:18px; font-family:'Courier New'" align="center">✱ <%= stockCompany5 %> comprises <%= stock5Percent %> %</h4>
+    <% percentages.forEach(function(percentage) { %>
+      <h4 style="font-size:18px; font-family:'Courier New'" align="center">✱ <%= percentage.name %> comprises <%= percentage.percent %> %</h4>
+    <% }); %>
 
     <h2 style="font-size:22px; font-family:'Courier New'"><center>Good Luck! <%= name %> <div class="chum">(▰˘◡˘▰)</div></center></h2>
-    <p align='center'><button onclick="document.location='/'">👋 Start Over</button></p>
+
+    <div align='center' style="margin: 20px 0;">
+      <button onclick="printPage()" style="margin: 5px; padding: 2px;">🖨️ Print Page</button>
+      <button onclick="saveAsImage()" style="margin: 5px; padding: 2px;">📷 Save as Image</button>
+    </div>
+
+    <div align='center' style="margin: 10px 0;">
+      <button onclick="document.location='/'" style="margin: 5px;">👋 Start Over</button>
+    </div>
   </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    function printPage() {
+      window.print();
+    }
+
+    function saveAsImage() {
+      const element = document.querySelector('.container');
+      const options = {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        scrollX: 0,
+        scrollY: 0,
+        width: element.scrollWidth,
+        height: element.scrollHeight
+      };
+
+      html2canvas(element, options).then(function(canvas) {
+        // Create download link
+        const link = document.createElement('a');
+        link.download = 'stock-trade-results-<%= name %>.png';
+        link.href = canvas.toDataURL('image/png');
+
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }).catch(function(error) {
+        console.error('Error generating image:', error);
+        alert('Error saving image. Please try again or use the print function.');
+      });
+    }
+  </script>
 </body>
 </html>

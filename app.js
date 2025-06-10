@@ -19,28 +19,22 @@ app.get('/app', (req, res) => {
 });
 
 app.post('/submit', (req, res) => {
-  const {
-    name,
-    capital,
-    stockCompany1,
-    stock1Price,
-    stockCompany2,
-    stock2Price,
-    stockCompany3,
-    stock3Price,
-    stockCompany4,
-    stock4Price,
-    stockCompany5,
-    stock5Price
-  } = req.body;
+  const { name, capital, stockCount } = req.body;
+  const numStocks = parseInt(stockCount);
 
-  const stockPrices = [
-    { name: stockCompany1, price: parseFloat(stock1Price) },
-    { name: stockCompany2, price: parseFloat(stock2Price) },
-    { name: stockCompany3, price: parseFloat(stock3Price) },
-    { name: stockCompany4, price: parseFloat(stock4Price) },
-    { name: stockCompany5, price: parseFloat(stock5Price) }
-  ];
+  // Build stockPrices array dynamically
+  const stockPrices = [];
+  for (let i = 1; i <= numStocks; i++) {
+    const companyName = req.body[`stockCompany${i}`];
+    const stockPrice = req.body[`stock${i}Price`];
+
+    if (companyName && stockPrice) {
+      stockPrices.push({
+        name: companyName,
+        price: parseFloat(stockPrice)
+      });
+    }
+  }
 
   const investments = calculateInvestments(parseFloat(capital), stockPrices);
   const shares = calculateShares(investments, stockPrices);
@@ -53,29 +47,13 @@ app.post('/submit', (req, res) => {
   res.render('result', {
     name,
     capital: parseFloat(capital),
-    stockCompany1,
-    stock1Price,
-    stockCompany2,
-    stock2Price,
-    stockCompany3,
-    stock3Price,
-    stockCompany4,
-    stock4Price,
-    stockCompany5,
-    stock5Price,
-    stock1InvestAmount: investments[0].amount,
-    stock2InvestAmount: investments[1].amount,
-    stock3InvestAmount: investments[2].amount,
-    stock4InvestAmount: investments[3].amount,
-    stock5InvestAmount: investments[4].amount,
+    stockPrices,
+    investments,
+    shares,
+    percentages,
     shareBuyAverage: averageShares,
     totalInvestmentAmount: totalInvestment,
-    totalAmountShares: amountShares,
-    stock1Percent: percentages[0].percent,
-    stock2Percent: percentages[1].percent,
-    stock3Percent: percentages[2].percent,
-    stock4Percent: percentages[3].percent,
-    stock5Percent: percentages[4].percent
+    totalAmountShares: amountShares
   });
 });
 
