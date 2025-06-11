@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Saved Results - Stock Trade Generator</title>
   <link href="/style3.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -10,6 +11,71 @@
     h1 a:hover {
       font-weight: 1000 !important;
     }
+    .saved-result-item {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .button-group {
+      text-align: center;
+      margin: 15px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .button-group button {
+      flex: 0 1 auto;
+      min-width: 120px;
+    }
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      .saved-result-item {
+        margin: 15px 0;
+        padding: 15px;
+      }
+      .button-group {
+        flex-direction: column;
+        align-items: center;
+      }
+      .button-group button {
+        width: 100%;
+        max-width: 280px;
+        margin: 5px 0;
+      }
+      h1, h2 {
+        font-size: clamp(20px, 5vw, 38px) !important;
+      }
+    }
+    /* Modal responsive styles */
+    @media (max-width: 768px) {
+      .modal-overlay {
+        padding: 5px !important;
+      }
+      .modal-content {
+        max-width: 95vw !important;
+        max-height: 95vh !important;
+        margin: 5px !important;
+        padding: 15px !important;
+        font-size: 14px;
+      }
+      .modal-content h1 {
+        font-size: 20px !important;
+      }
+      .modal-content h2 {
+        font-size: 18px !important;
+      }
+      .modal-content h3 {
+        font-size: 16px !important;
+      }
+      .modal-content button {
+        width: 100% !important;
+        max-width: 200px !important;
+        margin: 5px auto !important;
+        display: block !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -17,9 +83,9 @@
     <h1 style="font-size:38px; font-family:'Courier New'" align='center'><a href="/" style="color: #2080df; text-decoration: none;">💵 $tock Trade Generator</a></h1>
     <h2 style="font-size:28px; font-family:'Courier New'" align='center'>Your Saved Results</h2>
 
-    <div align='center' style="margin: 20px 0;">
-      <button onclick="document.location='/app'" style="margin: 5px;">📊 New Analysis</button>
-      <button onclick="handleSignOut()" style="margin: 5px;">🚪 Logout</button>
+    <div class="button-group">
+      <button onclick="document.location='/app'">📊 New Analysis</button>
+      <button onclick="handleSignOut()">🚪 Logout</button>
     </div>
 
     <div id="savedResultsContainer">

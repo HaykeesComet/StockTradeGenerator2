@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>$tock Trade Generator</title>
   <link href="/style2.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -10,10 +11,32 @@
     h1 a:hover {
       font-weight: 1000 !important;
     }
+    .stock-entry {
+      margin: 15px 0;
+      padding: 15px;
+      border: 2px solid #ffad33;
+      border-radius: 10px;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .button-group {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .button-group button {
+      margin: 5px;
+    }
+    @media (max-width: 768px) {
+      .button-group button {
+        display: block;
+        width: 100%;
+        max-width: 300px;
+        margin: 10px auto;
+      }
+    }
   </style>
 </head>
 <body>
-  <div>
+  <div class="container">
     <h1><a href="/" style="color: #2080df; text-decoration: none;">💵 $tock Trade Generator</a></h1>
     <h2>For Top 5 Best Performing Stocks Right Now</h2>
     <p class='cat' align='center'>┍————- /ᐠ｡ꞈ｡ᐟ\ ————┑</p>
@@ -46,14 +69,14 @@
         <!-- Stock entries will be dynamically generated here -->
       </div>
 
-      <p>
+      <div class="button-group">
         <button type="button" id="addStockBtn" class="add-btn">➕ Add Stock</button>
         <button type="button" id="removeStockBtn" class="remove-btn">➖ Remove Stock</button>
-      </p>
+      </div>
 
-      <p>
-        <button type="submit">Submit</button>
-      </p>
+      <div class="button-group">
+        <button type="submit">🚀 Generate Analysis</button>
+      </div>
     </form>
 
     <script>

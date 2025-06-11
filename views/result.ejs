@@ -3,11 +3,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stock Trade Results</title>
   <link href="/style3.css" rel="stylesheet">
   <style>
     h1 a:hover {
       font-weight: 1000 !important;
+    }
+    .button-group {
+      text-align: center;
+      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .button-group button {
+      flex: 0 1 auto;
+      min-width: 120px;
+    }
+    @media (max-width: 768px) {
+      .button-group {
+        flex-direction: column;
+        align-items: center;
+      }
+      .button-group button {
+        width: 100%;
+        max-width: 300px;
+        margin: 5px 0;
+      }
+      h1, h2, h3 {
+        font-size: clamp(16px, 4vw, 28px) !important;
+      }
+      p {
+        font-size: clamp(14px, 3vw, 16px);
+        padding: 0 10px;
+      }
     }
   </style>
 </head>
@@ -55,15 +86,15 @@
 
     <h2 style="font-size:22px; font-family:'Courier New'"><center>Good Luck! <%= name %> <div class="chum">(▰˘◡˘▰)</div></center></h2>
 
-    <div align='center' style="margin: 20px 0;">
-      <button onclick="printPage()" style="margin: 5px; padding: 2px;">🖨️ Print Page</button>
-      <button onclick="saveAsImage()" style="margin: 5px; padding: 2px;">📷 Save as Image</button>
-      <button onclick="saveResults()" style="margin: 5px;" class="auth-required" id="saveBtn">💾 Save Results</button>
+    <div class="button-group">
+      <button onclick="printPage()">🖨️ Print Page</button>
+      <button onclick="saveAsImage()">📷 Save as Image</button>
+      <button onclick="saveResults()" class="auth-required" id="saveBtn">💾 Save Results</button>
     </div>
 
-    <div align='center' style="margin: 10px 0;">
-      <button onclick="document.location='/saved-results'" style="margin: 5px;" class="auth-required">📁 View Saved Results</button>
-      <button onclick="document.location='/app'" style="margin: 5px;">👋 Start Over</button>
+    <div class="button-group">
+      <button onclick="document.location='/saved-results'" class="auth-required">📁 View Saved Results</button>
+      <button onclick="document.location='/app'">👋 Start Over</button>
     </div>
 
     <div class="no-auth-required" style="text-align: center; margin: 10px 0; color: #666;">

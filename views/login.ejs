@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - $tock Trade Generator</title>
   <link href="/style.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -10,17 +11,27 @@
     h1 a:hover {
       font-weight: 1000 !important;
     }
+    .form-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    @media (max-width: 768px) {
+      .form-container {
+        padding: 10px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div>
+  <div class="container">
     <h1><a href="/" style="color: #2080df; text-decoration: none;">💵 $tock Trade Generator</a></h1>
     <h2>Login to Your Account</h2>
     <p class='cat' align='center'>┍————- /ᐠ｡ꞈ｡ᐟ\ ————┑</p>
     <p align='center'; style="color:#ffad33; font-size:15px; font-style:italic; font-weight:bold">Created by Hector Garingalao Sevilla</p>
     <p class='cat' align='center'>┕————(..)(..) ∫∫————-┙</p>
     
-    <div id="loginForm">
+    <div class="form-container">
       <form id="loginFormElement">
         <p>
           <label for="email">Email:</label>
@@ -30,11 +41,11 @@
           <label for="password">Password:</label>
           <input type="password" id="password" name="password" required>
         </p>
-        <p>
-          <button type="submit">Login</button>
+        <p style="text-align: center;">
+          <button type="submit">🔐 Login</button>
         </p>
       </form>
-      
+
       <p align="center">
         Don't have an account? <a href="/signup">Sign up here</a>
       </p>
