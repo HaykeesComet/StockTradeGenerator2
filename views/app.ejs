@@ -102,7 +102,7 @@
             <label for="stockCompany${stockCount}">What is the name or symbol of stock company ${stockCount}?</label>
             <input type="text" id="stockCompany${stockCount}" name="stockCompany${stockCount}" required><br>
             <label for="stock${stockCount}Price">What is the current price of stock company ${stockCount}?</label>
-            <input type="number" id="stock${stockCount}Price" name="stock${stockCount}Price" step="0.01" required>
+            <input type="number" id="stock${stockCount}Price" name="stock${stockCount}Price" step="0.01" min="0" required>
           </p>
         `;
 
@@ -111,7 +111,7 @@
       }
 
       function removeStockEntry() {
-        if (stockCount > 5) {
+        if (stockCount > 2) {
           const stockToRemove = document.getElementById(`stock-${stockCount}`);
           stockToRemove.remove();
           stockCount--;
@@ -121,7 +121,17 @@
 
       function updateRemoveButtonVisibility() {
         const removeBtn = document.getElementById('removeStockBtn');
-        removeBtn.style.display = stockCount > 5 ? 'inline-block' : 'none';
+        // Always show the button, but disable it when stockCount <= 2
+        removeBtn.style.display = 'inline-block';
+        if (stockCount <= 2) {
+          removeBtn.disabled = true;
+          removeBtn.style.opacity = '0.5';
+          removeBtn.style.cursor = 'not-allowed';
+        } else {
+          removeBtn.disabled = false;
+          removeBtn.style.opacity = '1';
+          removeBtn.style.cursor = 'pointer';
+        }
       }
 
       // Initialize with 5 stock entries
