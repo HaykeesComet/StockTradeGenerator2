@@ -319,12 +319,14 @@
       modalContent.style.cssText = `
         background-color: white;
         padding: 30px;
-        border-radius: 15px;
+        border-radius: 0;
         max-width: 800px;
         max-height: 90vh;
         overflow-y: auto;
+        overflow-x: hidden;
         margin: 20px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        position: relative;
       `;
 
       // Format date
@@ -346,7 +348,6 @@
           <h1 style="color: #2080df; font-family: 'Courier New';">💵 Stock Trade Analysis</h1>
           <h2 style="color: #333; font-family: 'Courier New';">Detailed Results</h2>
           <p style="color: #666;">Analysis created on ${date} at ${time}</p>
-          <button onclick="this.closest('.modal-overlay').remove()" style="position: absolute; top: 15px; left: 50%; transform: translateX(-50%); background: transparent; color: #ffad33; border: none; cursor: pointer; font-size: 28px; font-weight: bold; padding: 5px; transition: all 0.2s ease;" onmouseover="this.style.color='#e6941a'; this.style.transform='translateX(-50%) scale(1.2)'" onmouseout="this.style.color='#ffad33'; this.style.transform='translateX(-50%) scale(1)'">×</button>
         </div>
 
         <div style="margin-bottom: 20px; padding: 15px; background-color: #f0f8ff; border-radius: 10px;">
