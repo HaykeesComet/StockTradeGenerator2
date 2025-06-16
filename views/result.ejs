@@ -114,8 +114,44 @@
     </div>
   </div>
 
+  <!-- Notification area for messages -->
+  <div id="notificationArea" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; width: 90%; max-width: 500px; display: none;">
+    <div id="notificationMessage" style="padding: 15px 20px; border-radius: 8px; color: white; font-weight: bold; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); font-family: 'Xanh Mono', monospace;"></div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
+    // Notification system
+    function showNotification(message, type = 'info') {
+      const notificationArea = document.getElementById('notificationArea');
+      const notificationMessage = document.getElementById('notificationMessage');
+
+      // Set message and styling based on type
+      notificationMessage.textContent = message;
+
+      switch(type) {
+        case 'success':
+          notificationMessage.style.backgroundColor = '#4CAF50';
+          break;
+        case 'error':
+          notificationMessage.style.backgroundColor = '#f44336';
+          break;
+        case 'warning':
+          notificationMessage.style.backgroundColor = '#ff9800';
+          break;
+        default:
+          notificationMessage.style.backgroundColor = '#2080df';
+      }
+
+      // Show notification
+      notificationArea.style.display = 'block';
+
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        notificationArea.style.display = 'none';
+      }, 5000);
+    }
+
     function printPage() {
       window.print();
     }
@@ -145,7 +181,7 @@
         document.body.removeChild(link);
       }).catch(function(error) {
         console.error('Error generating image:', error);
-        alert('Error saving image. Please try again or use the print function.');
+        showNotification('Error saving image. Please try again or use the print function.', 'error');
       });
     }
 
@@ -169,14 +205,16 @@
 
       // Check if Firebase is loaded
       if (typeof window.firebaseAuth === 'undefined') {
-        alert('Firebase is not loaded. Please refresh the page and try again.');
+        showNotification('Firebase is not loaded. Please refresh the page and try again.', 'error');
         return;
       }
 
       // Check if user is authenticated
       if (!currentUser) {
-        alert('Please login to save your results.');
-        window.location.href = '/login';
+        showNotification('Please login to save your results.', 'warning');
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 2000);
         return;
       }
 
@@ -199,7 +237,7 @@
           const result = await window.saveStockResults(currentUser.uid, resultsData);
 
           if (result.success) {
-            alert('Results saved successfully!');
+            showNotification('Results saved successfully!', 'success');
             saveBtn.innerHTML = '✅ Saved';
             setTimeout(() => {
               saveBtn.innerHTML = originalText;
@@ -233,7 +271,7 @@
         console.log('Server response:', result);
 
         if (result.success) {
-          alert('Results saved successfully!');
+          showNotification('Results saved successfully!', 'success');
           saveBtn.innerHTML = '✅ Saved';
           setTimeout(() => {
             saveBtn.innerHTML = originalText;
@@ -243,9 +281,9 @@
           // Handle server-side Firebase not configured
           if (result.instructions && Array.isArray(result.instructions)) {
             const instructionsText = result.instructions.join('\n');
-            alert(`Server-side saving not available.\n\n${result.error}\n\nTo enable server-side saving:\n${instructionsText}\n\nNote: Client-side saving should work without additional setup.`);
+            showNotification(`Server-side saving not available. ${result.error}. Note: Client-side saving should work without additional setup.`, 'warning');
           } else {
-            alert(`Error: ${result.error || 'Failed to save results'}`);
+            showNotification(`Error: ${result.error || 'Failed to save results'}`, 'error');
           }
           saveBtn.innerHTML = originalText;
           saveBtn.disabled = false;
@@ -259,7 +297,7 @@
           errorMessage = 'Server configuration issue. Client-side Firebase should still work.';
         }
 
-        alert(`Error saving results: ${errorMessage}`);
+        showNotification(`Error saving results: ${errorMessage}`, 'error');
         saveBtn.innerHTML = originalText;
         saveBtn.disabled = false;
       }
