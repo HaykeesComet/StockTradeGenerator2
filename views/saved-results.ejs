@@ -388,7 +388,7 @@
 
         <div style="margin-bottom: 20px; padding: 15px; background-color: #f0f0f8; border-radius: 10px;">
           <h3 style="color: #2080df; margin-top: 0;">📋 Summary</h3>
-          <p><strong>Average Shares to Buy:</strong> ${result.shareBuyAverage ? result.shareBuyAverage.toFixed(2) : 'N/A'}</p>
+          <p><strong>Average Shares to Buy:</strong> ${result.shareBuyAverage ? Math.round(result.shareBuyAverage) : 'N/A'}</p>
           <p><strong>Total Investment Amount (Robinhood):</strong> $${result.totalInvestmentAmount ? result.totalInvestmentAmount.toFixed(2) : 'N/A'}</p>
           <p><strong>Total Investment Amount (E*TRADE):</strong> $${result.totalAmountShares ? result.totalAmountShares.toFixed(2) : 'N/A'}</p>
         </div>
