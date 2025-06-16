@@ -164,15 +164,21 @@ mark {
   body {
     padding: 15px;
     background-attachment: scroll;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
 
   main {
     padding: 20px 10px;
     width: 100%;
+    box-sizing: border-box;
   }
 
   .container {
     padding: 15px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
   }
 
   h1 {

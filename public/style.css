@@ -211,15 +211,21 @@ th, td {
   body {
     background-attachment: scroll;
     padding: 15px;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
 
   main {
     padding: 15px 10px;
     width: 100%;
+    box-sizing: border-box;
   }
 
   .container {
     padding: 15px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
   }
 
   button {

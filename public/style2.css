@@ -1,5 +1,10 @@
 html {
   height: 100%;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 
 body {
@@ -153,15 +158,21 @@ mark {
   body {
     padding: 15px;
     background-attachment: scroll;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
 
   main {
     padding: 20px 10px;
     width: 100%;
+    box-sizing: border-box;
   }
 
   .container {
-    padding: 15px;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
   }
 
   h1 {
@@ -170,6 +181,18 @@ mark {
 
   h2 {
     font-size: 1.8em;
+  }
+
+  /* Ensure all form elements respect container boundaries */
+  input, select, textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  button {
+    box-sizing: border-box;
+    max-width: 100%;
   }
 }
 
