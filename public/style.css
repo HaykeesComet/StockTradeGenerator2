@@ -16,7 +16,7 @@ body {
   background-position: center;
   background-size: cover;
   margin: 0;
-  padding: 10px;
+  padding: 20px;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -142,7 +142,7 @@ mark {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 10px;
+  padding: 20px;
   width: 100%;
 }
 
@@ -210,12 +210,16 @@ th, td {
 @media (max-width: 768px) {
   body {
     background-attachment: scroll;
-    padding: 5px;
+    padding: 15px;
   }
 
   main {
-    padding: 10px 5px;
+    padding: 15px 10px;
     width: 100%;
+  }
+
+  .container {
+    padding: 15px;
   }
 
   button {
@@ -245,7 +249,11 @@ th, td {
 @media (min-width: 769px) and (max-width: 1024px) {
   main {
     width: 90%;
-    padding: 20px;
+    padding: 25px;
+  }
+
+  .container {
+    padding: 25px;
   }
 
   button {
@@ -259,5 +267,9 @@ th, td {
   main {
     width: 85%;
     max-width: 1200px;
+  }
+
+  .container {
+    padding: 30px;
   }
 }

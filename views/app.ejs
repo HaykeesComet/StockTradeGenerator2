@@ -51,15 +51,15 @@
     <p class='cat' align='center'>┕————(..)(..) ∫∫————-┙</p>
 
     <!-- Authentication status display -->
-    <div class="auth-required" style="display: none; text-align: center; margin: 10px 0;">
+    <div class="auth-required" style="display: none; text-align: center; margin: 20px 0;">
       <p style="color: #2080df;">Welcome back! <span id="userEmail"></span></p>
       <p>
-        <a href="/saved-results" style="margin: 0 10px;">📁 View Saved Results</a>
-        <a href="#" onclick="handleSignOut()" style="margin: 0 10px;">🚪 Logout</a>
+        <a href="/saved-results" style="margin: 0 15px;">📁 View Saved Results</a>
+        <a href="#" onclick="handleSignOut()" style="margin: 0 15px;">🚪 Logout</a>
       </p>
     </div>
 
-    <div class="no-auth-required" style="text-align: center; margin: 10px 0;">
+    <div class="no-auth-required" style="text-align: center; margin: 20px 0;">
       <p style="color: #666;">You're using guest mode. <a href="/login">Login</a> to save your results.</p>
     </div>
     <form action="/submit" method="post" id="stockForm">
@@ -191,9 +191,11 @@
     </script>
 
     <main></main>
-    <p align='center'><a href="https://www.barchart.com/stocks/highs-lows/highs?timeFrame=1m&orderBy=percentChange&orderDir=desc" target="_blank">👋 Top Market Leaders [US Exchanges 1-Month New Highs] Are Here!</a></p>
-    <p align='center'><a href="https://www.barchart.com/stocks/most-active/price-volume-leaders?orderBy=percentChange&orderDir=desc&viewName=main" target="_blank">👋 Top Market Leaders [US Exchanges Price Volume] Are Here!</a></p>
-    <p class="bottom" align='center'><a href="https://www.barchart.com/stocks/performance/percent-change/advances?viewName=technical&orderBy=opinion&orderDir=desc" target="_blank">👋 Top Market Leaders [US Exchanges Percent Change Advances] Are Here!</a></p>
+    <div style="margin-top: 30px;">
+      <p align='center'><a href="https://www.barchart.com/stocks/highs-lows/highs?timeFrame=1m&orderBy=percentChange&orderDir=desc" target="_blank">👋 Top Market Leaders [US Exchanges 1-Month New Highs] Are Here!</a></p>
+      <p align='center'><a href="https://www.barchart.com/stocks/most-active/price-volume-leaders?orderBy=percentChange&orderDir=desc&viewName=main" target="_blank">👋 Top Market Leaders [US Exchanges Price Volume] Are Here!</a></p>
+      <p class="bottom" align='center' style="margin-bottom: 30px;"><a href="https://www.barchart.com/stocks/performance/percent-change/advances?viewName=technical&orderBy=opinion&orderDir=desc" target="_blank">👋 Top Market Leaders [US Exchanges Percent Change Advances] Are Here!</a></p>
+    </div>
   </div>
 </body>
 </html>

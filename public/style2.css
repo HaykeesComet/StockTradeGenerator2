@@ -5,13 +5,16 @@ html {
 body {
   color: #000000;
   font-family: 'Xanh Mono', monospace;
-  box-sizing: ;
+  box-sizing: border-box;
   background-color: ;
   background: url("Money.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-position: ;
+  background-position: center;
   background-size: cover;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
 }
 
 div {
@@ -21,8 +24,16 @@ div {
 main {
   width: 90%;
   max-width: 1080px;
-  padding: 40px 0 0;
+  padding: 40px 20px 20px;
   margin: 0 auto;
+}
+
+/* Container styles for app page */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  width: 100%;
 }
 
 h1 {
@@ -138,14 +149,46 @@ mark {
   font-weight: bold;
 }
 
-@media (max-width: 650px) {
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+    background-attachment: scroll;
+  }
+
+  main {
+    padding: 20px 10px;
+    width: 100%;
+  }
+
+  .container {
+    padding: 15px;
+  }
+
   h1 {
-    
+    font-size: 2.5em;
   }
+
   h2 {
-    
+    font-size: 1.8em;
   }
-  p {
-    
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    padding: 25px;
+  }
+
+  main {
+    padding: 40px 25px 25px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .container {
+    padding: 30px;
+  }
+
+  main {
+    padding: 40px 30px 30px;
   }
 }
