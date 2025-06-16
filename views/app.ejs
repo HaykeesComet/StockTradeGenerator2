@@ -89,11 +89,11 @@
     </div>
     <form action="/submit" method="post" id="stockForm">
       <p>
-        <label for="name">What is your First Name?</label>
+        <label for="name">What is your <b>First Name</b>?</label>
         <input type="text" id="name" name="name" required>
       </p>
       <p>
-        <label for="capital">What is your total initial capital?</label>
+        <label for="capital">What is your total initial <b>capital</b>?</label>
         <input type="number" id="capital" name="capital" required>
       </p>
 
@@ -124,9 +124,9 @@
 
         stockDiv.innerHTML = `
           <p>
-            <label for="stockCompany${stockCount}">What is the name or symbol of stock company ${stockCount}?</label>
+            <label for="stockCompany${stockCount}">What is the <b>name</b> or <b>symbol</b> of stock company ${stockCount}?</label>
             <input type="text" id="stockCompany${stockCount}" name="stockCompany${stockCount}" required><br>
-            <label for="stock${stockCount}Price">What is the current price of stock company ${stockCount}?</label>
+            <label for="stock${stockCount}Price">What is the current <b>price</b> of price of stock company ${stockCount}?</label>
             <input type="number" id="stock${stockCount}Price" name="stock${stockCount}Price" step="0.01" min="0" required>
           </p>
         `;
