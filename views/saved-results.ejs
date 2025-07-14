@@ -440,6 +440,20 @@
           <p style="color: #666;">Analysis created on ${date} at ${time}</p>
         </div>
 
+        <!-- Dividend/Profit Calculator Section -->
+        <div style="background-color: #f8f9fa; padding: 20px; margin-bottom: 25px; border: 2px solid #2080df;">
+          <h3 style="color: #2080df; font-family: 'Courier New'; margin-top: 0;">💰 Dividend/Profit Distribution Calculator</h3>
+          <div style="margin-bottom: 15px;">
+            <label for="dividendAmount" style="display: block; margin-bottom: 5px; font-weight: bold; color: #333;">Enter Dividend/Profit Amount ($):</label>
+            <input type="number" id="dividendAmount" step="0.01" min="0" placeholder="0.00" style="width: 200px; padding: 8px; border: 1px solid #ccc; font-size: 16px;">
+            <button onclick="calculateDividendDistribution()" style="margin-left: 10px; padding: 8px 15px; background-color: #2080df; color: white; border: none; cursor: pointer; font-weight: bold;">Calculate Distribution</button>
+          </div>
+          <div id="dividendResults" style="display: none; margin-top: 15px;">
+            <h4 style="color: #333; margin-bottom: 10px;">Distribution by Investment Percentage:</h4>
+            <div id="dividendBreakdown" style="font-family: 'Courier New'; font-size: 14px;"></div>
+          </div>
+        </div>
+
         <div style="margin-bottom: 20px; padding: 15px; background-color: #f0f8ff; border-radius: 10px;">
           <h3 style="color: #2080df; margin-top: 0;">📊 Basic Information</h3>
           <p><strong>Name:</strong> ${result.name}</p>
@@ -489,6 +503,7 @@
       `;
 
       modalOverlay.className = 'modal-overlay';
+      modalContent.setAttribute('data-result-id', result.id);
       modalOverlay.appendChild(modalContent);
       document.body.appendChild(modalOverlay);
 
@@ -506,6 +521,67 @@
         }
       });
     }
+
+    // Dividend/Profit Distribution Calculator
+    window.calculateDividendDistribution = function() {
+      const dividendInput = document.getElementById('dividendAmount');
+      const dividendResults = document.getElementById('dividendResults');
+      const dividendBreakdown = document.getElementById('dividendBreakdown');
+
+      const dividendAmount = parseFloat(dividendInput.value);
+
+      if (!dividendAmount || dividendAmount <= 0) {
+        showNotification('Please enter a valid dividend/profit amount greater than 0.', 'warning');
+        return;
+      }
+
+      // Get the current modal's result data
+      const modalContent = dividendInput.closest('.modal-overlay').querySelector('[data-result-id]');
+      const resultId = modalContent ? modalContent.getAttribute('data-result-id') : null;
+
+      if (!resultId) {
+        showNotification('Error: Could not find result data.', 'error');
+        return;
+      }
+
+      const result = window.currentResults.find(r => r.id === resultId);
+      if (!result) {
+        showNotification('Error: Result data not found.', 'error');
+        return;
+      }
+
+      // Calculate distribution based on investment percentages
+      let breakdownHTML = '<table style="width: 100%; border-collapse: collapse;">';
+      breakdownHTML += '<tr style="background-color: #2080df; color: white;"><th style="padding: 8px; border: 1px solid #ddd;">Stock</th><th style="padding: 8px; border: 1px solid #ddd;">Dividend/Profit Share</th></tr>';
+
+      // Check if percentages data exists
+      if (!result.percentages || !Array.isArray(result.percentages)) {
+        breakdownHTML += '<tr><td colspan="2" style="padding: 8px; text-align: center; color: #ff4444;">No investment percentage data available</td></tr>';
+      } else {
+        // Process each stock from percentages array
+        result.percentages.forEach((percentage, index) => {
+          const stockName = percentage.name;
+          const investmentPercentage = percentage.percent;
+
+          if (stockName && investmentPercentage !== undefined) {
+            const dividendShare = (dividendAmount * investmentPercentage / 100);
+
+            breakdownHTML += `<tr style="background-color: ${index % 2 === 0 ? '#f9f9f9' : 'white'};">
+              <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">${stockName}</td>
+              <td style="padding: 8px; border: 1px solid #ddd; text-align: right; color: #2080df; font-weight: bold;">$${dividendShare.toFixed(2)}</td>
+            </tr>`;
+          }
+        });
+      }
+
+      breakdownHTML += '</table>';
+
+      // Show results
+      dividendBreakdown.innerHTML = breakdownHTML;
+      dividendResults.style.display = 'block';
+
+      showNotification(`Dividend/Profit of $${dividendAmount.toFixed(2)} distributed successfully!`, 'success');
+    };
 
     window.deleteResultFromModal = async function(resultId, buttonElement) {
       // Find the result for confirmation
