@@ -465,22 +465,22 @@
 
         <div style="margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 10px;">
           <h3 style="color: #2080df; margin-top: 0;">📈 Stock Prices</h3>
-          ${result.stockPrices.map(stock => `
-            <p>Current price for '<em>${stock.name}</em>' is <strong>$${stock.price}</strong></p>
+          ${result.stockPrices.map((stock, index) => `
+            <p><strong style="font-size: 1.2em;">${index + 1}.</strong> Current price for '<em>${stock.name}</em>' is <strong>$${stock.price}</strong></p>
           `).join('')}
         </div>
 
         <div style="margin-bottom: 20px; padding: 15px; background-color: #f0fff0; border-radius: 10px;">
           <h3 style="color: #2080df; margin-top: 0;">💻 Amounts for Robinhood</h3>
-          ${result.investments ? result.investments.map(investment => `
-            <p><em>Amount to 'BUY' for <strong>${investment.name}</strong> is <mark><strong><u>$${investment.amount.toFixed(2)}</u></strong></mark></em></p>
+          ${result.investments ? result.investments.map((investment, index) => `
+            <p><strong style="font-size: 1.2em;">${index + 1}.</strong> <em>Amount to 'BUY' for <strong>${investment.name}</strong> is <mark><strong><u>$${investment.amount.toFixed(2)}</u></strong></mark></em></p>
           `).join('') : '<p>Investment data not available</p>'}
         </div>
 
         <div style="margin-bottom: 20px; padding: 15px; background-color: #fff8f0; border-radius: 10px;">
           <h3 style="color: #2080df; margin-top: 0;">📊 Number of Shares for E*TRADE</h3>
-          ${result.shares ? result.shares.map(share => `
-            <p>Number of shares to 'BUY' for <strong>${share.name}</strong> is <mark><strong><u>${share.shares}</u></strong></mark></p>
+          ${result.shares ? result.shares.map((share, index) => `
+            <p><strong style="font-size: 1.2em;">${index + 1}.</strong> Number of shares to 'BUY' for <strong>${share.name}</strong> is <mark><strong><u>${share.shares}</u></strong></mark></p>
           `).join('') : '<p>Shares data not available</p>'}
         </div>
 
